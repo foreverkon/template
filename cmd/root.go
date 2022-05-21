@@ -1,34 +1,28 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
-*/
 package cmd
 
 import (
 	"os"
+	"time"
 
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
+// some color functions
+var (
+	blue    = color.New(color.FgBlue).SprintFunc()
+	green   = color.New(color.FgGreen)
+	red     = color.New(color.FgRed)
+	yellow  = color.New(color.FgYellow)
+	magenta = color.New(color.FgMagenta)
+)
 
-
-// rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "template",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
+	Use:   "template <cmd> <flag> <option>",
+	Short: "A command-line  tool to download some template files",
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
@@ -37,15 +31,30 @@ func Execute() {
 }
 
 func init() {
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
+	cobra.OnInitialize(initConfig)
 
-	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.template.yaml)")
+	// define global flags
+	rootCmd.PersistentFlags().StringP("templates", "t", "", "path of the tempaltes.json")
 
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// define local flags
+
+	// bind flags to viper
+	viper.BindPFlag("templates", rootCmd.PersistentFlags().Lookup("templates"))
 }
 
-
+func initConfig() {
+	if viper.GetString("templates") != "" {
+		viper.SetConfigFile(viper.GetString("templates"))
+	} else {
+		viper.AutomaticEnv()
+		viper.SetConfigFile(viper.GetString("GOPATH") + "\\cfg\\templates.json")
+	}
+	err := viper.ReadInConfig()
+	if err != nil {
+		// if there is no config file, create one
+		viper.SetDefault("update", time.Now().Unix())
+		viper.SetDefault("names", []string{})
+		viper.SetDefault("tempaltes", map[string]string{})
+		viper.WriteConfig()
+	}
+}
