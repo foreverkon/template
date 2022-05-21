@@ -16,6 +16,7 @@ var (
 		"https://github.com/github/gitignore/tree/main/Global",
 		"https://github.com/github/gitignore",
 		"https://github.com/foreverkon/template-files",
+		"https://github.com/nishanths/license/tree/master/.templates",
 	}
 
 	// coressponding dowload prefix
@@ -23,6 +24,7 @@ var (
 		"https://raw.githubusercontent.com/github/gitignore/main/Global/",
 		"https://raw.githubusercontent.com/github/gitignore/main/",
 		"https://raw.githubusercontent.com/foreverkon/template-files/main/",
+		"https://raw.githubusercontent.com/nishanths/license/master/.templates/",
 	}
 
 	// ignore_files
