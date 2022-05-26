@@ -34,12 +34,13 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	// define global flags
-	rootCmd.PersistentFlags().StringP("templates", "t", "", "path of the tempaltes.json")
+	rootCmd.PersistentFlags().StringP("name", "n", "", "name of the template to search or download")
 
 	// define local flags
+	rootCmd.Flags().StringP("templates", "t", "", "path of the tempaltes.json")
 
 	// bind flags to viper
-	viper.BindPFlag("templates", rootCmd.PersistentFlags().Lookup("templates"))
+	viper.BindPFlag("templates", rootCmd.LocalFlags().Lookup("templates"))
 }
 
 func initConfig() {
